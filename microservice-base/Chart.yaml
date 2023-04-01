@@ -1,0 +1,9 @@
+apiVersion: v2
+name: microservice-base
+description: A helm chart for building microservices
+type: application
+version: 0.1.0
+appVersion: 1.16.0
+maintainers:
+  - name: Josh Smith
+    url: https://github.com/cmyui
