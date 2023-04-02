@@ -4,7 +4,9 @@ app:
   group: app
   replicaCount: 1
   container:
-    image: application-backend:latest
+    image:
+      repository: application-backend
+      tag: latest
     port: 80
     config: []
   service:
