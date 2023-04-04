@@ -21,6 +21,10 @@ spec:
           image: "{{ .Values.app.container.image.repository }}:{{ .Values.app.container.image.tag }}"
           ports:
             - containerPort: {{ .Values.app.container.port }}
+          {{- with .Values.app.container.imagePullSecrets }}
+          imagePullSecrets:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
           env:
             {{- range $key := .Values.app.container.env }}
             - name: {{ $key }}
