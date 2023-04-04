@@ -10,6 +10,10 @@ spec:
   selector:
     matchLabels:
       app: {{ .Values.app.name }}
+    annotations:
+        vault.hashicorp.com/agent-inject: 'true'
+        vault.hashicorp.com/role: {{ .Values.app.name }}
+        vault.hashicorp.com/agent-inject-secret-database-config.txt: 'internal/data/database/config'
   template:
     metadata:
       labels:
