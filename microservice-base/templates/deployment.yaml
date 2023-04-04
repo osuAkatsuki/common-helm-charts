@@ -18,7 +18,7 @@ spec:
       annotations:
           vault.hashicorp.com/agent-inject: 'true'
           vault.hashicorp.com/role: {{ .Values.app.name }}-{{ .Values.app.environment }}
-          vault.hashicorp.com/agent-inject-secrets.txt: services/{{ .Values.app.environment }}/{{ .Values.app.name }}
+          vault.hashicorp.com/agent-inject-secret-secrets.txt: services/{{ .Values.app.environment }}/{{ .Values.app.name }}
     spec:
       serviceAccountName: {{ .Values.app.name }}-{{ .Values.app.environment }}
       containers:
