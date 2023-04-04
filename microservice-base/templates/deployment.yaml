@@ -10,30 +10,31 @@ spec:
   selector:
     matchLabels:
       app: {{ .Values.app.name }}-{{ .Values.app.environment }}
-    annotations:
-        vault.hashicorp.com/agent-inject: 'true'
-        vault.hashicorp.com/role: {{ .Values.app.name }}-{{ .Values.app.environment }}
-        vault.hashicorp.com/agent-inject-secret-database-config.txt: 'internal/data/database/config'
   template:
     metadata:
       labels:
         app: {{ .Values.app.name }}-{{ .Values.app.environment }}
         group: {{ .Values.app.group }}
+      annotations:
+          vault.hashicorp.com/agent-inject: 'true'
+          vault.hashicorp.com/role: {{ .Values.app.name }}-{{ .Values.app.environment }}
+          vault.hashicorp.com/agent-inject-secret-database-config.txt: 'internal/data/database/config'
     spec:
+      serviceAccountName: {{ .Values.app.name }}-{{ .Values.app.environment }}
       containers:
         - name: {{ .Values.app.name }}-{{ .Values.app.environment }}
           image: {{ .Values.app.container.image.repository }}:{{ .Values.app.container.image.tag }}
           ports:
             - containerPort: {{ .Values.app.container.port }}
-          {{- with .Values.app.container.imagePullSecrets }}
-          imagePullSecrets:
-            {{- toYaml . | nindent 12 }}
-          {{- end }}
-          env:
-            {{- range $key := .Values.app.container.env }}
-            - name: {{ $key }}
-              valueFrom:
-                secretKeyRef:
-                  name: users-service-staging
-                  key: {{ $key }}
-            {{- end }}
+          # env:
+          #   {{- range $key := .Values.app.container.env }}
+          #   - name: {{ $key }}
+          #     valueFrom:
+          #       secretKeyRef:
+          #         name: users-service-staging
+          #         key: {{ $key }}
+          #   {{- end }}
+      {{- with .Values.app.container.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
