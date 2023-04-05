@@ -16,6 +16,7 @@ spec:
         app: {{ .Values.app.name }}-{{ .Values.app.environment }}
         group: {{ .Values.app.group }}
       annotations:
+          rollme: {{ randAlphaNum 5 | quote }}
           vault.hashicorp.com/agent-inject: 'true'
           vault.hashicorp.com/role: '{{ .Values.app.name }}-{{ .Values.app.environment }}'
           vault.hashicorp.com/agent-inject-secret-secrets.txt: 'services/staging/users-service'
