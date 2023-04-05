@@ -19,13 +19,13 @@ spec:
           rollme: {{ randAlphaNum 5 | quote }}
           vault.hashicorp.com/agent-inject: 'true'
           vault.hashicorp.com/role: '{{ .Values.app.name }}-{{ .Values.app.environment }}'
-          vault.hashicorp.com/agent-inject-secret-secrets.txt: 'services/staging/users-service'
+          vault.hashicorp.com/agent-inject-secret-secrets.txt: 'services/{{ .Values.app.environment }}/{{ .Values.app.name }}'
           vault.hashicorp.com/agent-inject-template-secrets.txt: |
-            {{`{{- with secret "services/staging/users-service" }}
-            {{- range $k, $v := .Data.data }}
-            export {{ $k }}={{ $v }}
-            {{- end }}
-            {{- end }} `}}
+            {{ "{{" }}- with secret "services/{{ .Values.app.environment }}/{{ .Values.app.name }}" {{ "}}" }}
+            {{ "{{" }}- range $k, $v := .Data.data {{ "}}" }}
+            export {{ "{{" }} $k {{ "}}" }}={{ "{{" }} $v {{ "}}" }}
+            {{ "{{" }}- end {{ "}}" }}
+            {{ "{{" }}- end {{ "}}" }}
     spec:
       serviceAccountName: {{ .Values.app.name }}-{{ .Values.app.environment }}
       containers:
@@ -33,14 +33,6 @@ spec:
           image: {{ .Values.app.container.image.repository }}:{{ .Values.app.container.image.tag }}
           ports:
             - containerPort: {{ .Values.app.container.port }}
-          # env:
-          #   {{- range $key := .Values.app.container.env }}
-          #   - name: {{ $key }}
-          #     valueFrom:
-          #       secretKeyRef:
-          #         name: users-service-staging
-          #         key: {{ $key }}
-          #   {{- end }}
       {{- with .Values.app.container.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
