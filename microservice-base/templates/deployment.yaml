@@ -33,6 +33,9 @@ spec:
           image: {{ .Values.app.container.image.repository }}:{{ .Values.app.container.image.tag }}
           ports:
             - containerPort: {{ .Values.app.container.port }}
+          env:
+            - name: KUBERNETES
+              value: 'true'
       {{- with .Values.app.container.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
