@@ -17,8 +17,14 @@ spec:
         group: {{ .Values.app.group }}
       annotations:
           vault.hashicorp.com/agent-inject: 'true'
-          vault.hashicorp.com/role: {{ .Values.app.name }}-{{ .Values.app.environment }}
-          vault.hashicorp.com/agent-inject-secret-secrets.txt: services/{{ .Values.app.environment }}/{{ .Values.app.name }}
+          vault.hashicorp.com/role: '{{ .Values.app.name }}-{{ .Values.app.environment }}'
+          vault.hashicorp.com/agent-inject-secret-secrets.txt: 'services/staging/users-service'
+          vault.hashicorp.com/agent-inject-template-secrets.txt: |
+            {{`{{- with secret "services/staging/users-service" }}
+            {{- range $k, $v := .Data.data }}
+            export {{ $k }}={{ $v }}
+            {{- end }}
+            {{- end }} `}}
     spec:
       serviceAccountName: {{ .Values.app.name }}-{{ .Values.app.environment }}
       containers:
