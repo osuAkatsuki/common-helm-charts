@@ -23,7 +23,7 @@ spec:
           vault.hashicorp.com/agent-inject-template-secrets.txt: |
             {{ "{{" }}- with secret "services/{{ .Values.app.environment }}/{{ .Values.app.name }}" {{ "}}" }}
             {{ "{{" }}- range $k, $v := .Data.data {{ "}}" }}
-            export {{ "{{" }} $k {{ "}}" }}={{ "{{" }} $v {{ "}}" }}
+            export {{ "{{" }} $k {{ "}}" }}="{{ "{{" }} $v {{ "}}" }}"
             {{ "{{" }}- end {{ "}}" }}
             {{ "{{" }}- end {{ "}}" }}
     spec:
