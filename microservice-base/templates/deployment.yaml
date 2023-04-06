@@ -36,6 +36,8 @@ spec:
           env:
             - name: KUBERNETES
               value: 'true'
+            - name: APP_ENV
+              value: {{ .Values.app.environment }}
       {{- with .Values.app.container.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
