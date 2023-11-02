@@ -57,7 +57,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: pypi
-                  key: index-url
+                  key: address
             - name: APP_ENV
               value: {{ .environment }}
       {{- with .container.imagePullSecrets }}
