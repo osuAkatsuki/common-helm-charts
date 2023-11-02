@@ -1,15 +1,28 @@
-app:
-  name: app-staging
-  environment: staging
-  group: app
-  replicaCount: 1
-  container:
-    image:
-      repository: application-backend
-      tag: latest
-    imagePullSecrets: []
-    port: 80
-    config: []
-  service:
-    type: ClusterIP
-    port: 80
+apps:
+  - name: product-service-api
+    environment: production
+    group: product-service-api
+    replicaCount: 1
+    container:
+      image:
+        repository: product-service-api
+        tag: latest
+      imagePullSecrets: []
+      port: 80
+    service:
+      type: ClusterIP
+      port: 80
+
+  - name: product-service-worker
+    environment: production
+    group: product-service-worker
+    replicaCount: 1
+    container:
+      image:
+        repository: product-service-worker
+        tag: latest
+      imagePullSecrets: []
+      port: 80
+    service:
+      type: ClusterIP
+      port: 80

@@ -1,44 +1,46 @@
+{{- range .Values.apps }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Values.app.name }}-{{ .Values.app.environment }}
+  name: {{ .name }}-{{ .environment }}
   labels:
-    app: {{ .Values.app.name }}-{{ .Values.app.environment }}
-    group: {{ .Values.app.group }}
+    app: {{ .name }}-{{ .environment }}
+    group: {{ .group }}
 spec:
-  replicas: {{ .Values.app.replicaCount }}
+  replicas: {{ .replicaCount }}
   selector:
     matchLabels:
-      app: {{ .Values.app.name }}-{{ .Values.app.environment }}
+      app: {{ .name }}-{{ .environment }}
   template:
     metadata:
       labels:
-        app: {{ .Values.app.name }}-{{ .Values.app.environment }}
-        group: {{ .Values.app.group }}
+        app: {{ .name }}-{{ .environment }}
+        group: {{ .group }}
       annotations:
           rollme: {{ randAlphaNum 5 | quote }}
           vault.hashicorp.com/agent-inject: 'true'
-          vault.hashicorp.com/role: '{{ .Values.app.name }}-{{ .Values.app.environment }}'
-          vault.hashicorp.com/agent-inject-secret-secrets.txt: 'services/{{ .Values.app.environment }}/{{ .Values.app.name }}'
+          vault.hashicorp.com/role: '{{ .name }}-{{ .environment }}'
+          vault.hashicorp.com/agent-inject-secret-secrets.txt: 'services/{{ .environment }}/{{ .name }}'
           vault.hashicorp.com/agent-inject-template-secrets.txt: |
-            {{ "{{" }}- with secret "services/{{ .Values.app.environment }}/{{ .Values.app.name }}" {{ "}}" }}
+            {{ "{{" }}- with secret "services/{{ .environment }}/{{ .name }}" {{ "}}" }}
             {{ "{{" }}- range $k, $v := .Data.data {{ "}}" }}
             export {{ "{{" }} $k {{ "}}" }}="{{ "{{" }} $v {{ "}}" }}"
             {{ "{{" }}- end {{ "}}" }}
             {{ "{{" }}- end {{ "}}" }}
     spec:
-      serviceAccountName: {{ .Values.app.name }}-{{ .Values.app.environment }}
+      serviceAccountName: {{ .name }}-{{ .environment }}
       containers:
-        - name: {{ .Values.app.name }}-{{ .Values.app.environment }}
-          image: {{ .Values.app.container.image.repository }}:{{ .Values.app.container.image.tag }}
+        - name: {{ .name }}-{{ .environment }}
+          image: {{ .container.image.repository }}:{{ .container.image.tag }}
           ports:
-            - containerPort: {{ .Values.app.container.port }}
+            - containerPort: {{ .container.port }}
           env:
             - name: KUBERNETES
               value: 'true'
             - name: APP_ENV
-              value: {{ .Values.app.environment }}
-      {{- with .Values.app.container.imagePullSecrets }}
-      imagePullSecrets:
-        {{- toYaml . | nindent 8 }}
+              value: {{ .environment }}
+      {{- with .container.imagePullSecrets }}
+        imagePullSecrets:
+          {{- toYaml . | nindent 8 }}
       {{- end }}
+{{- end }}
