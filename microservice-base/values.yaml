@@ -7,8 +7,9 @@ apps:
       image:
         repository: product-service-api
         tag: latest
-      imagePullSecrets: []
       port: 80
+      env: []
+      imagePullSecrets: []
     service:
       type: ClusterIP
       port: 80
@@ -21,8 +22,9 @@ apps:
       image:
         repository: product-service-worker
         tag: latest
-      imagePullSecrets: []
       port: 80
+      env: []
+      imagePullSecrets: []
     service:
       type: ClusterIP
       port: 80
