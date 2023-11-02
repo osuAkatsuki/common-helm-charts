@@ -1,7 +1,7 @@
 apps:
   - name: product-service-api
     environment: production
-    group: product-service-api
+    codebase: product-service
     replicaCount: 1
     container:
       image:
@@ -16,7 +16,7 @@ apps:
 
   - name: product-service-worker
     environment: production
-    group: product-service-worker
+    codebase: product-service
     replicaCount: 1
     container:
       image:
