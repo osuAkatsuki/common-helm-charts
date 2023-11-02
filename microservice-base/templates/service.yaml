@@ -1,13 +1,15 @@
+{{- range .Values.apps }}
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ .Values.app.name }}-{{ .Values.app.environment }}
+  name: {{ .name }}-{{ .environment }}
   labels:
-    group: {{ .Values.app.group }}
+    group: {{ .group }}
 spec:
-  type: {{ .Values.app.service.type }}
+  type: {{ .service.type }}
   selector:
-    app: {{ .Values.app.name }}-{{ .Values.app.environment }}
+    app: {{ .name }}-{{ .environment }}
   ports:
-    - port: {{ .Values.app.service.port }}
-      targetPort: {{ .Values.app.container.port }}
+    - port: {{ .service.port }}
+      targetPort: {{ .container.port }}
+{{- end }}
