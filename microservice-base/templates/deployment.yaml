@@ -37,8 +37,20 @@ spec:
           env:
             - name: KUBERNETES
               value: 'true'
+            - name: VAULT_ADDR
+              value: 'TODO'
+            - name: VAULT_TOKEN
+              value: 'TODO'
+            - name: PYPI_INDEX_URL
+              value: 'TODO'
+            - name: PULL_SECRETS_FROM_VAULT
+              value: '1'
             - name: APP_ENV
               value: {{ .environment }}
+            {{- range .container.env }}
+            - name: {{ .name }}
+              value: {{ .value }}
+            {{- end }}
       {{- with .container.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
