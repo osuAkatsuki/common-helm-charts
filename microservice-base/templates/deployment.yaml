@@ -61,6 +61,7 @@ spec:
             - name: APP_ENV
               value: {{ .environment }}
       {{- with .container.imagePullSecrets }}
+      hostNetwork: {{ .hostNetworkEnabled }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
