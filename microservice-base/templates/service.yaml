@@ -19,6 +19,15 @@ spec:
       {{ if .service.name }}
       name: {{ .service.name }}
       {{- end }}
+      {{ if .service.protocol }}
+      protocol: {{ .service.protocol }}
+      {{- end }}
+      {{ if .service.externalIPs }}
+      externalIPs:
+        {{- range .service.externalIPs }}
+        - {{ . }}
+        {{- end }}
+      {{- end }}
       {{ if eq .service.type "NodePort" }}
       nodePort: {{ .service.nodePort }}
       {{- end }}
