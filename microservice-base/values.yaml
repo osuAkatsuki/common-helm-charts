@@ -10,7 +10,7 @@ apps:
       port: 80
       env: []
       imagePullSecrets: []
-      hostNetworkEnabled: false
+    hostNetworkEnabled: false
     service:
       type: ClusterIP
       port: 80
@@ -26,7 +26,7 @@ apps:
       port: 80
       env: []
       imagePullSecrets: []
-      hostNetworkEnabled: false
+    hostNetworkEnabled: false
     service:
       type: ClusterIP
       port: 80
