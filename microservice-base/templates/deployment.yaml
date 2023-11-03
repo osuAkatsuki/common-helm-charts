@@ -60,7 +60,6 @@ spec:
                   key: address
             - name: APP_ENV
               value: {{ .environment }}
-      hostNetwork: {{ .hostNetworkEnabled }}
       {{- with .container.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}

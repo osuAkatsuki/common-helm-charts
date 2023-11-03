@@ -12,5 +12,8 @@ spec:
   ports:
     - port: {{ .service.port }}
       targetPort: {{ .container.port }}
+      {{ if eq .service.type "NodePort" }}
+      nodePort: {{ .service.nodePort }}
+      {{- end }}
 ---
 {{- end }}
