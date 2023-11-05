@@ -34,7 +34,6 @@ spec:
           image: {{ .container.image.repository }}:{{ .container.image.tag }}
           ports:
             - containerPort: {{ .container.port }}
-          # livenessProbe: {{ toYaml .container.livenessProbe | nindent 12 }}
           readinessProbe: {{ toYaml .container.readinessProbe | nindent 12 }}
           env:
             {{- range .container.env }}
