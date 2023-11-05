@@ -10,6 +10,15 @@ apps:
       port: 80
       env: []
       imagePullSecrets: []
+      readinessProbe:
+        httpGet:
+          path: /_health
+          port: {{ .container.port }}
+        initialDelaySeconds: 5
+        periodSeconds: 10
+        timeoutSeconds: 1
+        successThreshold: 1
+        failureThreshold: 3
     service:
       type: ClusterIP
       port: 80
