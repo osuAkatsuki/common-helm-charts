@@ -19,6 +19,11 @@ apps:
         timeoutSeconds: 1
         successThreshold: 1
         failureThreshold: 3
+      resources:
+        limits:
+          cpu: 500m
+        requests:
+          cpu: 200m
     service:
       type: ClusterIP
       port: 80
@@ -34,6 +39,11 @@ apps:
       port: 80
       env: []
       imagePullSecrets: []
+      resources:
+        limits:
+          cpu: 500m
+        requests:
+          cpu: 200m
     service:
       type: ClusterIP
       port: 80

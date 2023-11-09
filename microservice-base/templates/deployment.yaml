@@ -35,6 +35,7 @@ spec:
           ports:
             - containerPort: {{ .container.port }}
           readinessProbe: {{ toYaml .container.readinessProbe | nindent 12 }}
+          resources: {{ toYaml .container.resources | nindent 12 }}
           env:
             {{- range .container.env }}
             - name: {{ .name }}
