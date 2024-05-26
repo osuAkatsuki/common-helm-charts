@@ -18,15 +18,15 @@ spec:
         group: {{ .group }}
       annotations:
           rollme: {{ randAlphaNum 5 | quote }}
-          vault.hashicorp.com/agent-inject: 'true'
-          vault.hashicorp.com/role: '{{ .codebase }}-{{ .environment }}'
-          vault.hashicorp.com/agent-inject-secret-secrets.txt: 'services/{{ .environment }}/{{ .codebase }}'
-          vault.hashicorp.com/agent-inject-template-secrets.txt: |
-            {{ "{{" }}- with secret "services/{{ .environment }}/{{ .codebase }}" {{ "}}" }}
-            {{ "{{" }}- range $k, $v := .Data.data {{ "}}" }}
-            export {{ "{{" }} $k {{ "}}" }}="{{ "{{" }} $v {{ "}}" }}"
-            {{ "{{" }}- end {{ "}}" }}
-            {{ "{{" }}- end {{ "}}" }}
+          # vault.hashicorp.com/agent-inject: 'true'
+          # vault.hashicorp.com/role: '{{ .codebase }}-{{ .environment }}'
+          # vault.hashicorp.com/agent-inject-secret-secrets.txt: 'services/{{ .environment }}/{{ .codebase }}'
+          # vault.hashicorp.com/agent-inject-template-secrets.txt: |
+          #   {{ "{{" }}- with secret "services/{{ .environment }}/{{ .codebase }}" {{ "}}" }}
+          #   {{ "{{" }}- range $k, $v := .Data.data {{ "}}" }}
+          #   export {{ "{{" }} $k {{ "}}" }}="{{ "{{" }} $v {{ "}}" }}"
+          #   {{ "{{" }}- end {{ "}}" }}
+          #   {{ "{{" }}- end {{ "}}" }}
     spec:
       serviceAccountName: {{ .codebase }}-{{ .environment }}
       containers:
@@ -60,11 +60,62 @@ spec:
                 secretKeyRef:
                   name: pypi
                   key: address
+            # TODO: dynamically fetch environment
             - name: APP_ENV
               value: {{ .environment }}
       {{- with .container.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+---
+{{- end }}
+
+{{- range .Values.cronjobs }}
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ .name }}-{{ .environment }}
+  labels:
+    app: {{ .name }}-{{ .environment }}
+    codebase: {{ .codebase }}
+spec:
+  schedule: {{ .schedule }}
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: {{ .name }}-{{ .environment }}
+            image: {{ .container.image.repository }}:{{ .container.image.tag }}
+            command: {{ .container.command }}
+            resources: {{ toYaml .container.resources | nindent 12 }}
+            env:
+              {{- range .container.env }}
+              - name: {{ .name }}
+                value: {{ .value }}
+              {{- end }}
+              - name: KUBERNETES
+                value: 'true'
+              - name: PULL_SECRETS_FROM_VAULT
+                value: '1'
+              - name: VAULT_ADDR
+                valueFrom:
+                  secretKeyRef:
+                    name: vault
+                    key: address
+              - name: VAULT_TOKEN
+                valueFrom:
+                  secretKeyRef:
+                    name: vault
+                    key: token
+              - name: PYPI_INDEX_URL
+                valueFrom:
+                  secretKeyRef:
+                    name: pypi
+                    key: address
+          {{- with .container.imagePullSecrets }}
+          imagePullSecrets:
+            {{- toYaml . | nindent 8 }}
+          {{- end }}
 ---
 {{- end }}
