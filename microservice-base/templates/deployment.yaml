@@ -36,6 +36,7 @@ spec:
             - containerPort: {{ .container.port }}
           readinessProbe: {{ toYaml .container.readinessProbe | nindent 12 }}
           resources: {{ toYaml .container.resources | nindent 12 }}
+          volumeMounts: {{ toYaml .container.volumeMounts | nindent 12 }}
           env:
             {{- range .container.env }}
             - name: {{ .name }}
@@ -62,6 +63,10 @@ spec:
                   key: address
             - name: APP_ENV
               value: {{ .environment }}
+      {{- with .volumes }}
+      volumes:
+        {{- toYaml . | nindent 8}}
+      {{- end }}
       {{- with .container.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
