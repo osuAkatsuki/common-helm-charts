@@ -18,15 +18,6 @@ spec:
         group: {{ .group }}
       annotations:
           rollme: {{ randAlphaNum 5 | quote }}
-          vault.hashicorp.com/agent-inject: 'true'
-          vault.hashicorp.com/role: '{{ .codebase }}-{{ .environment }}'
-          vault.hashicorp.com/agent-inject-secret-secrets.txt: 'services/{{ .environment }}/{{ .codebase }}'
-          vault.hashicorp.com/agent-inject-template-secrets.txt: |
-            {{ "{{" }}- with secret "services/{{ .environment }}/{{ .codebase }}" {{ "}}" }}
-            {{ "{{" }}- range $k, $v := .Data.data {{ "}}" }}
-            export {{ "{{" }} $k {{ "}}" }}="{{ "{{" }} $v {{ "}}" }}"
-            {{ "{{" }}- end {{ "}}" }}
-            {{ "{{" }}- end {{ "}}" }}
     spec:
       serviceAccountName: {{ .codebase }}-{{ .environment }}
       containers:
