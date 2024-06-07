@@ -7,7 +7,11 @@ metadata:
     app: {{ .name }}-{{ .environment }}
     codebase: {{ .codebase }}
 spec:
-  replicas: {{ .replicaCount }}
+  {{ if not .autoscaling }}
+  # Do not set a replica count if autoscaling is enabled
+  # https://technologyconversations.com/2018/10/10/to-replicas-or-not-to-replicas-in-kubernetes-deployments-and-statefulsets/
+  replicas: {{ required "replicaCount is required if autoscaling is disabled" .replicaCount }}
+  {{- end }}
   selector:
     matchLabels:
       app: {{ .name }}-{{ .environment }}
