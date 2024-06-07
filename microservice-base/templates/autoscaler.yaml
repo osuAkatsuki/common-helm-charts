@@ -9,15 +9,15 @@ spec:
     apiVersion: apps/v1
     kind: Deployment
     name: {{ .name }}-{{ .environment }}
-  minReplicas: {{ .autoscaling.minReplicas }}
-  maxReplicas: {{ .autoscaling.maxReplicas }}
+  minReplicas: {{ required "minReplicas is required if autoscaling is enabled" .autoscaling.minReplicas }}
+  maxReplicas: {{ required "maxReplicas is required if autoscaling is enabled" .autoscaling.maxReplicas }}
   metrics:
   - type: Resource
     resource:
       name: cpu
       target:
         type: Utilization
-        averageUtilization: {{ .autoscaling.targetCPUUtilizationPercentage }}
+        averageUtilization: {{ required "targetCPUUtilizationPercentage is required if autoscaling is enabled" .autoscaling.targetCPUUtilizationPercentage }}
 ---
 {{- end }}
 {{- end }}
