@@ -1,5 +1,5 @@
 {{- range .Values.apps }}
-{{- if .autoscaling }}
+{{- if (and .autoscaling .autoscaling.enabled) }}
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
