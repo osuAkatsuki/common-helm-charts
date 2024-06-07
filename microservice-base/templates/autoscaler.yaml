@@ -1,0 +1,23 @@
+{{- range .Values.apps }}
+{{- if (and .autoscaling .autoscaling.enabled) }}
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ .name }}-{{ .environment }}
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ .name }}-{{ .environment }}
+  minReplicas: {{ required "minReplicas is required if autoscaling is enabled" .autoscaling.minReplicas }}
+  maxReplicas: {{ required "maxReplicas is required if autoscaling is enabled" .autoscaling.maxReplicas }}
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: {{ required "targetCPUUtilizationPercentage is required if autoscaling is enabled" .autoscaling.targetCPUUtilizationPercentage }}
+---
+{{- end }}
+{{- end }}
