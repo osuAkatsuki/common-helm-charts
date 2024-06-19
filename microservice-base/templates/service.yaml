@@ -6,9 +6,6 @@ metadata:
   name: {{ .name }}-{{ .environment }}
   labels:
     group: {{ .group }}
-    {{- if not .service }}
-    sidecar.istio.io/inject: "false"
-    {{- end }}
   {{ if eq .service.type "LoadBalancer" }}
   annotations:
     kubernetes.digitalocean.com/load-balancer-id: {{ .service.loadBalancerID }}
