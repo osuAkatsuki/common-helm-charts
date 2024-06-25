@@ -20,7 +20,9 @@ spec:
       labels:
         app: {{ .name }}-{{ .environment }}
         group: {{ .group }}
-        {{- if not .service }}
+        {{- if .service }}
+        proxy.istio.io/config: '{ "holdApplicationUntilProxyStarts": true }'
+        {{- else }}
         sidecar.istio.io/inject: "false"
         {{- end }}
       annotations:
