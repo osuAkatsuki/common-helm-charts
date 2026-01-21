@@ -20,9 +20,6 @@ spec:
       labels:
         app: {{ .name }}-{{ .environment }}
         group: {{ .group }}
-        {{- if not .service }}
-        sidecar.istio.io/inject: "false"
-        {{- end }}
       annotations:
           rollme: {{ randAlphaNum 5 | quote }}
     spec:
